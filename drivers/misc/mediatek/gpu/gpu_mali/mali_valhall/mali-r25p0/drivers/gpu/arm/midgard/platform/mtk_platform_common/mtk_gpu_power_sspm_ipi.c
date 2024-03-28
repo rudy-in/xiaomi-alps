@@ -88,9 +88,9 @@ static void MTKGPUPower_model_kbase_setup(int flag, unsigned int interval_ns) {
 
 void MTKGPUPower_model_sspm_enable(void) {
 	int pm_tool = MTK_get_mtk_pm();
-	if (pm_tool == pm_non){
+
+	if (pm_tool == pm_non)
 		MTKGPUPower_model_kbase_setup(pm_swpm, 0);
-	}
 
 	MTKGPUPower_model_kbase_setup(pm_swpm, 0);
 	gpu_send_enable_ipi(GPU_PM_SWITCH, 1);

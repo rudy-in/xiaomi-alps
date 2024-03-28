@@ -22,9 +22,11 @@ obj-y += thermal_budget.o
 obj-y += thermal_base.o
 
 ccflags-y += -I$(MTK_TOP)/thermal/common/inc/
+ccflags-$(CONFIG_MACH_MT6833) += -I$(MTK_TOP)/thermal/mt6833/inc/
 ccflags-y += -I$(MTK_TOP)/thermal/$(MTK_PLATFORM)/inc/
 ccflags-y += -I$(MTK_TOP)/base/power/$(MTK_PLATFORM)/
 ccflags-y += -I$(MTK_TOP)/base/power/include/
+ccflags-$(CONFIG_MACH_MT6833) += -I$(MTK_TOP)/base/power/ppm_v3/src/mach/mt6833/
 ccflags-y += -I$(MTK_TOP)/base/power/ppm_v3/src/mach/$(MTK_PLATFORM)/
 ccflags-y += -I$(MTK_TOP)/base/power/ppm_v3/inc/
 ccflags-y += -I$(FPSGO_TOP)/

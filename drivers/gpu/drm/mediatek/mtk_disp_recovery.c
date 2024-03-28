@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2019 MediaTek Inc.
+ * Copyright (C) 2021 XiaoMi, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -36,7 +37,7 @@
 #include "mtk_drm_trace.h"
 
 #define ESD_TRY_CNT 5
-#define ESD_CHECK_PERIOD 2000 /* ms */
+#define ESD_CHECK_PERIOD 4000 /* ms */
 
 /* pinctrl implementation */
 long _set_state(struct drm_crtc *crtc, const char *name)
@@ -429,7 +430,7 @@ static int mtk_drm_esd_recover(struct drm_crtc *crtc)
 #ifdef MTK_FB_MMDVFS_SUPPORT
 	if (drm_crtc_index(crtc) == 0)
 		mtk_disp_set_hrt_bw(mtk_crtc,
-			mtk_crtc->qos_ctx->last_hrt_req);
+				    mtk_crtc->qos_ctx->last_hrt_req);
 #endif
 
 	mtk_drm_crtc_enable(crtc);
@@ -472,6 +473,7 @@ static int mtk_drm_esd_check_worker_kthread(void *data)
 	struct mtk_drm_private *private = crtc->dev->dev_private;
 	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
 	struct mtk_drm_esd_ctx *esd_ctx = mtk_crtc->esd_ctx;
+	struct mtk_panel_ext *panel_ext = mtk_crtc->panel_ext;
 	int ret = 0;
 	int i = 0;
 	int recovery_flg = 0;
@@ -480,7 +482,11 @@ static int mtk_drm_esd_check_worker_kthread(void *data)
 
 	if (!crtc) {
 		DDPPR_ERR("%s invalid CRTC context, stop thread\n", __func__);
+		return -EINVAL;
+	}
 
+	if (unlikely(!(panel_ext && panel_ext->params))) {
+		DDPPR_ERR("%s invalid  panel_ext handle\n", __func__);
 		return -EINVAL;
 	}
 
@@ -490,7 +496,8 @@ static int mtk_drm_esd_check_worker_kthread(void *data)
 			esd_ctx->check_task_wq,
 			atomic_read(&esd_ctx->check_wakeup) &&
 			(atomic_read(&esd_ctx->target_time) ||
-				esd_ctx->chk_mode == READ_EINT));
+			(panel_ext->params->cust_esd_check == 0) &&
+			 (esd_ctx->chk_mode == READ_EINT)));
 		if (ret < 0) {
 			DDPINFO("[ESD]check thread waked up accidently\n");
 			continue;

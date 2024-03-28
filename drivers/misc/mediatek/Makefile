@@ -174,3 +174,5 @@ obj-$(CONFIG_MTK_MDDP_SUPPORT) += mddp/
 obj-$(CONFIG_MTK_USB2JTAG_SUPPORT) += usb2jtag/
 obj-y += subpmic/
 obj-$(CONFIG_MTK_OTP) += otp/
+# BSP.System - 2020.11.2 - add simtray status
+obj-y += simtray/

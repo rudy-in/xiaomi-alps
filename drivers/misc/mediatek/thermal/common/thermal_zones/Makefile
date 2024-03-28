@@ -472,6 +472,9 @@ obj-$(CONFIG_THERMAL) += mtk_ts_pmic.o
 obj-$(CONFIG_THERMAL) += mtk_ts_charger.o
 #obj-$(CONFIG_THERMAL) += mtk_ts_charger2.o
 
+# BSP.Charge - 2020.11.24 - Config thermal framework - start
+obj-$(CONFIG_THERMAL) += mtk_ts_blk_ntc.o
+# BSP.Charge - 2020.11.24 - Config thermal framework - end
 
 ifneq ($(CONFIG_MTK_COMBO_WIFI),)
     obj-$(CONFIG_THERMAL) += mtk_ts_wmt.o

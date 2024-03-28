@@ -39,3 +39,6 @@ subdir-ccflags-y += $(CUSTOM_KERNEL_FLAGS)
 
 obj-y += $(subst ",,$(CONFIG_MTK_PLATFORM_SENSOR))/
 
+ifeq ($(TARGET_PRODUCT),$(filter $(TARGET_PRODUCT),camellia))
+KBUILD_CFLAGS += -DTARGET_PRODUCT_CAMELLIA
+endif

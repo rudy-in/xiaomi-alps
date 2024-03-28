@@ -70,7 +70,6 @@ struct fbt_thread_blc {
 };
 
 struct fbt_boost_info {
-	int target_fps;
 	unsigned long long target_time;
 	unsigned int last_blc;
 
@@ -161,7 +160,6 @@ struct fpsgo_loading {
 	int loading;
 	int prefer_type;
 	int policy;
-	long nice_bk;
 };
 
 struct gbe_runtime {

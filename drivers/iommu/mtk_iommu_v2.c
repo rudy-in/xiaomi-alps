@@ -2589,7 +2589,6 @@ int mtk_iommu_get_iova_space(struct device *dev,
 		unsigned long *base, unsigned long *max,
 		int *owner, struct list_head *list)
 {
-	int ret;
 	struct mtk_iommu_domain *dom;
 	struct mtk_iommu_pgtable *pgtable = mtk_iommu_get_pgtable(NULL, 0);
 	unsigned long flags = 0;
@@ -2605,13 +2604,7 @@ int mtk_iommu_get_iova_space(struct device *dev,
 
 	if (pgtable)
 		spin_lock_irqsave(&pgtable->pgtlock, flags);
-	ret = iommu_dma_get_iovad_info(dev, base, max);
-	if (ret) {
-		pr_info("%s, get_iovad_info fail, dev:%s\n",
-			__func__, dev_name(dev));
-		*base = 0;
-		*max = 0;
-	}
+	iommu_dma_get_iovad_info(dev, base, max);
 	if (pgtable)
 		spin_unlock_irqrestore(&pgtable->pgtlock, flags);
 
@@ -4012,6 +4005,12 @@ static void mtk_iommu_pg_after_on(enum subsys_id sys)
 		}
 
 		spin_lock_irqsave(&data->reg_lock, flags);
+		if (data->poweron) {
+			pr_notice("%s, iommu%u already power on, skip restore\n",
+				  __func__, data->m4uid);
+			spin_unlock_irqrestore(&data->reg_lock, flags);
+			continue;
+		}
 		data->poweron = true;
 
 		ret = mtk_iommu_reg_restore(data);
@@ -4048,6 +4047,12 @@ static void mtk_iommu_pg_before_off(enum subsys_id sys)
 		}
 
 		spin_lock_irqsave(&data->reg_lock, flags);
+		if (!data->poweron) {
+			pr_notice("%s, iommu%u already power off, skip backup\n",
+				  __func__, data->m4uid);
+			spin_unlock_irqrestore(&data->reg_lock, flags);
+			continue;
+		}
 		if (data->isr_ref) {
 			spin_unlock_irqrestore(&data->reg_lock, flags);
 			start = sched_clock();

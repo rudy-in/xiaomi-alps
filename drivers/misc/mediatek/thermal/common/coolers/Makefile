@@ -35,7 +35,6 @@ ccflags-y  += -I$(srctree)/drivers/misc/mediatek/sspm/$(MTK_PLATFORM)
 ccflags-y  += -I$(srctree)/drivers/misc/mediatek/mcupm/$(PDIR)
 endif
 ifeq ($(CONFIG_MTK_APUSYS_SUPPORT),y)
-ccflags-${CONFIG_MACH_MT6893} += -I$(srctree)/drivers/misc/mediatek/apusys/power/2.0/mt6893/
 ccflags-y  += -I$(srctree)/drivers/misc/mediatek/apusys/power/2.0/$(MTK_PLATFORM)
 else
 ccflags-y  += -I$(srctree)/drivers/misc/mediatek/vpu/$(PDIR)
@@ -229,6 +228,11 @@ else
 		obj-$(CONFIG_THERMAL) += mtk_cooler_bcct.o
 	endif
 endif
+# BSP.Charge - 2020.11.16 - Config thermal framework - start
+obj-$(CONFIG_THERMAL) += mtk_cooler_gpu_cus.o
+obj-$(CONFIG_THERMAL) += mtk_cooler_md_cus.o
+obj-$(CONFIG_THERMAL) += mtk_cooler_char_curr_cus.o
+# BSP.Charge - 2020.11.16 - Config thermal framework - end
 obj-$(CONFIG_THERMAL) += mtk_cooler_atm.o
 obj-$(CONFIG_THERMAL) += mtk_cooler_dtm.o
 obj-$(CONFIG_THERMAL) += mtk_cooler_sysrst.o

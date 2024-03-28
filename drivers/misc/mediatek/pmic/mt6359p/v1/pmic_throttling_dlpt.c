@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2018 MediaTek Inc.
+ * Copyright (C) 2021 XiaoMi, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -527,7 +528,10 @@ int g_battery_percent_stop;
 int g_battery_percent_level_ext;
 #endif
 
-#define BAT_PERCENT_LINIT 15
+//#ifdef __XIAOMI_CAMERA__
+#define BAT_PERCENT_LINIT 1
+//#define BAT_PERCENT_LINIT 15
+//#endif
 #ifdef BATTERY_PERCENT_NOTIFY_EXT
 #define BAT_PERCENT_LINIT_EXT_LOW 20
 #define BAT_PERCENT_LINIT_EXT_HIGH 25
@@ -619,7 +623,7 @@ void register_battery_percent_notify_ext(
 {
 	PMICLOG("[%s] start\n", __func__);
 
-	bpcb_tb_ext[(unsigned int)prio_val].bpcb = battery_percent_callback;
+	bpcb_tb_ext[prio_val].bpcb = battery_percent_callback;
 
 	pr_info("[%s] prio_val=%d\n", __func__, prio_val);
 

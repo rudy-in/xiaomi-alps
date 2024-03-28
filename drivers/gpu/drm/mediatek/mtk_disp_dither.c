@@ -83,12 +83,6 @@ static void mtk_dither_config(struct mtk_ddp_comp *comp,
 	struct mtk_disp_dither *priv = dev_get_drvdata(comp->dev);
 
 	unsigned int enable = 1;
-	unsigned int width;
-
-	if (comp->mtk_crtc->is_dual_pipe)
-		width = cfg->w / 2;
-	else
-		width = cfg->w;
 
 	DDPINFO("%s: bbp = %u\n", __func__, cfg->bpc);
 	DDPINFO("%s: width = %u height = %u\n", __func__, cfg->w, cfg->h);
@@ -177,7 +171,7 @@ static void mtk_dither_config(struct mtk_ddp_comp *comp,
 
 	cmdq_pkt_write(handle, comp->cmdq_base,
 		comp->regs_pa + DISP_REG_DITHER_SIZE,
-		width << 16 | cfg->h, ~0);
+		cfg->w << 16 | cfg->h, ~0);
 
 }
 
@@ -238,7 +232,7 @@ static void mtk_dither_prepare(struct mtk_ddp_comp *comp)
 	}
 #else
 #if defined(CONFIG_MACH_MT6873) || defined(CONFIG_MACH_MT6853) \
-	|| defined(CONFIG_MACH_MT6833)
+	|| defined(CONFIG_MACH_MT6833) || defined(CONFIG_MACH_MT6877)
 	/* Bypass shadow register and read shadow register */
 	mtk_ddp_write_mask_cpu(comp, DITHER_BYPASS_SHADOW,
 		DITHER_REG(0), DITHER_BYPASS_SHADOW);
@@ -489,6 +483,8 @@ static const struct of_device_id mtk_disp_dither_driver_dt_match[] = {
 	{ .compatible = "mediatek,mt6873-disp-dither",
 	  .data = &mt6873_dither_driver_data},
 	{ .compatible = "mediatek,mt6853-disp-dither",
+	  .data = &mt6853_dither_driver_data},
+	{ .compatible = "mediatek,mt6877-disp-dither",
 	  .data = &mt6853_dither_driver_data},
 	{ .compatible = "mediatek,mt6833-disp-dither",
 	  .data = &mt6833_dither_driver_data},

@@ -32,7 +32,7 @@ ccflags-y += -DGED_ENABLE_FB_DVFS
 ccflags-y += -DGED_ENABLE_DYNAMIC_DVFS_MARGIN
 ccflags-y += -DGED_CONFIGURE_LOADING_BASE_DVFS_STEP
 ccflags-y += -DGED_ENABLE_TIMER_BASED_DVFS_MARGIN
-ccflags-y += -DMTK_CPUFREQ
+#ccflags-y += -DMTK_CPUFREQ
 ccflags-y += -DGED_ENABLE_DVFS_LOADING_MODE
 endif
 
@@ -438,7 +438,6 @@ ccflags-y += -DGED_LOG_SIZE_LIMITED
 ccflags-y += -DGED_BUFFER_LOG_DISABLE
 endif
 endif
-
 
 ifeq ($(VER),eng)
 ccflags-y += -DGED_DEBUG_IOCTL_LOCK
